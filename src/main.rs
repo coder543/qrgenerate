@@ -1,4 +1,6 @@
-use std::io::{stdout, Write};
+extern crate indicatif;
+
+use indicatif::{ProgressBar, ProgressStyle};
 use std::process::Command;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::thread;
@@ -56,9 +58,12 @@ fn generate_code(word: String) {
 fn main() {
     let mut c = 'a';
     let mut word = String::new();
-    for i in 0..50000 {
-        print!("\r{}  {}", i, TASKS.load(Ordering::Relaxed));
-        stdout().flush().unwrap();
+    let bar = ProgressBar::new(50000);
+    bar.set_style(
+        ProgressStyle::default_bar()
+            .template("[{elapsed_precise}] {wide_bar:40.cyan/blue} {pos:>7}/{len:7} {eta_precise}"),
+    );
+    for _ in bar.wrap_iter(0..50000) {
         let mut new_word = word.clone();
         new_word.push(c);
         generate_code(new_word);
