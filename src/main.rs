@@ -61,7 +61,7 @@ fn main() {
     let bar = ProgressBar::new(50000);
     bar.set_style(
         ProgressStyle::default_bar()
-            .template("[{elapsed_precise}] {wide_bar:40.cyan/blue} {pos:>7}/{len:7} {eta_precise}"),
+            .template("[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {eta_precise}"),
     );
     for _ in bar.wrap_iter(0..50000) {
         let mut new_word = word.clone();
