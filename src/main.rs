@@ -55,25 +55,24 @@ fn generate_code(word: String) {
     });
 }
 
+fn generate(word: String, bar: &ProgressBar) {
+    if word.len() == 3 {
+        return;
+    }
+    for c in ('a' as u8)..('z' as u8) {
+        let mut new_word = word.clone();
+        new_word.push(c as char);
+        generate_code(new_word.clone());
+        bar.inc(1);
+        generate(new_word, bar);
+    }
+}
+
 fn main() {
-    let mut c = 'a';
-    let mut word = String::new();
-    let bar = ProgressBar::new(50000);
+    let bar = ProgressBar::new(17576);
     bar.set_style(
         ProgressStyle::default_bar()
             .template("[{elapsed_precise}] {wide_bar:.cyan/blue} {pos:>7}/{len:7} {eta_precise}"),
     );
-    for _ in bar.wrap_iter(0..50000) {
-        let mut new_word = word.clone();
-        new_word.push(c);
-        generate_code(new_word);
-        if c == 'z' {
-            c = 'A';
-        } else if c == 'Z' {
-            c = 'a';
-            word.push(c);
-        } else {
-            c = (c as u8 + 1) as char;
-        }
-    }
+    generate(String::new(), &bar);
 }
